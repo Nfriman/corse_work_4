@@ -28,8 +28,7 @@ class Parsing_hh(AbsParsing, ABC):
         self.url = f'https://api.hh.ru/vacancies?&only_with_salary=true&salary={self.salary}'  # АПИ сайта
 
     def parsing(self):
-        """ """
-        global salary_min
+        """ метод для получения АПИ с указанными параметрами его обработка и получения словаря с нужными данными"""
         parms = {"area": self.area,
                  "per_page": self.caount_vacan,
                  "text": self.text}
@@ -40,7 +39,11 @@ class Parsing_hh(AbsParsing, ABC):
             url = index['alternate_url']  # ссылка на вакансию
             experience = index['snippet']['requirement']  # опыт работы
             salary = f"от {index['salary']['from']} до {index['salary']['to']}"  # ЗП от и до
-            address = index['address']['raw']  # адрес офиса
+
+            if index['address'] != None:
+                address = index['address']['raw']  # адрес офиса
+            else:
+                address = 'Нет адреса'
 
             self.list_vacancy.append({"name": name, "salary": salary, 'url': url, 'experience': experience, 'address': address})
 
